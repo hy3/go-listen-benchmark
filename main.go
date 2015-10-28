@@ -32,6 +32,7 @@ func accept(addr string, endSig chan signal) {
 		fmt.Printf("Addr[%s] listen error: %s\n", addr, err)
 		return
 	}
+	defer ln.Close()
 
 	lnType := reflect.TypeOf(ln)
 	fmt.Printf("Addr[%s] listener type: %s\n", addr, lnType.String())
