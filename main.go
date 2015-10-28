@@ -1,17 +1,30 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
-	"reflect"
 	"time"
 )
+
+type args struct {
+	Host string
+	Port int
+}
 
 type signal struct{}
 
 func main() {
-	benchmark("localhost", 1234)
-	benchmark("127.0.0.1", 2345)
+	a := fetchArgs()
+	benchmark(a.Host, a.Port)
+}
+
+func fetchArgs() *args {
+	a := new(args)
+	flag.StringVar(&a.Host, "-h", "localhost", "hostname")
+	flag.IntVar(&a.Port, "-p", 1234, "portnum")
+	flag.Parse()
+	return a
 }
 
 func benchmark(host string, port int) {
@@ -32,9 +45,6 @@ func accept(port int, endSig chan signal) {
 		return
 	}
 	defer ln.Close()
-
-	lnType := reflect.TypeOf(ln)
-	fmt.Printf("Addr[%s] listener type: %s\n", addr, lnType.String())
 
 	before := time.Now()
 	conn, err := ln.Accept()
