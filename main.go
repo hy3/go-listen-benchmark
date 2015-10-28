@@ -46,27 +46,27 @@ func accept(port int, endSig chan signal) {
 	}
 	defer ln.Close()
 
-	before := time.Now()
 	conn, err := ln.Accept()
 	if err != nil {
 		fmt.Printf("Addr[%s] accept error: %s\n", addr, err)
 		return
 	}
 	defer conn.Close()
-	after := time.Now()
-
-	diff := after.UnixNano() - before.UnixNano()
-	fmt.Printf("Addr[%s] accept time: %d nanosecond.\n", addr, diff)
 }
 
 func dial(host string, port int) error {
 	addr := fmt.Sprintf("%s:%d", host, port)
+
+	before := time.Now()
 	conn, err := net.Dial("tcp", addr)
 	if err != nil {
 		fmt.Printf("Addr[%s] dial error: %s\n", addr, err)
 		return err
 	}
 	defer conn.Close()
+	after := time.Now()
+	diff := after.UnixNano() - before.UnixNano()
+	fmt.Printf("Addr[%s] get connection time: %d nanosecond.\n", addr, diff)
 
 	return nil
 }
