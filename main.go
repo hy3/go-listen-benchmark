@@ -11,7 +11,7 @@ type signal struct{}
 
 func main() {
 	benchmark("localhost:1234")
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(time.Second)
 	benchmark("127.0.0.1:2345")
 }
 
