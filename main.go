@@ -10,23 +10,23 @@ import (
 type signal struct{}
 
 func main() {
-	benchmark("localhost:1234")
+	benchmark("localhost", 1234)
 	time.Sleep(time.Second)
-	benchmark("127.0.0.1:2345")
+	benchmark("127.0.0.1", 2345)
 }
 
-func benchmark(addr string) {
+func benchmark(host string, port int) {
 	endSig := make(chan signal)
-	go accept(addr, endSig)
-	if err := dial(addr); err != nil {
-		fmt.Printf("Addr[%s] dial error: %s\n", addr, err)
+	go accept(port, endSig)
+	if err := dial(host, port); err != nil {
 		return
 	}
 	<-endSig
 }
 
-func accept(addr string, endSig chan signal) {
+func accept(port int, endSig chan signal) {
 	defer close(endSig)
+	addr := fmt.Sprintf(":%d", port)
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		fmt.Printf("Addr[%s] listen error: %s\n", addr, err)
@@ -50,9 +50,11 @@ func accept(addr string, endSig chan signal) {
 	fmt.Printf("Addr[%s] accept time: %d nanosecond.\n", addr, diff)
 }
 
-func dial(addr string) error {
+func dial(host string, port int) error {
+	addr := fmt.Sprintf("%s:%d", host, port)
 	conn, err := net.Dial("tcp", addr)
 	if err != nil {
+		fmt.Printf("Addr[%s] dial error: %s\n", addr, err)
 		return err
 	}
 	defer conn.Close()
