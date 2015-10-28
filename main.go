@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"reflect"
 	"time"
 )
 
@@ -19,6 +20,7 @@ func benchmark(addr string) {
 	go accept(addr, endSig)
 	if err := dial(addr); err != nil {
 		fmt.Printf("Addr[%s] dial error: %s\n", addr, err)
+		return
 	}
 	<-endSig
 }
@@ -30,6 +32,9 @@ func accept(addr string, endSig chan signal) {
 		fmt.Printf("Addr[%s] listen error: %s\n", addr, err)
 		return
 	}
+
+	lnType := reflect.TypeOf(ln)
+	fmt.Printf("Addr[%s] listener type: %s\n", addr, lnType.String())
 
 	before := time.Now()
 	conn, err := ln.Accept()
@@ -50,5 +55,6 @@ func dial(addr string) error {
 		return err
 	}
 	defer conn.Close()
+
 	return nil
 }
