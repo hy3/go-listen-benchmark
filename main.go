@@ -11,6 +11,7 @@ type signal struct{}
 
 func main() {
 	benchmark("localhost:1234")
+	time.Sleep(500 * time.Millisecond)
 	benchmark("127.0.0.1:2345")
 }
 
@@ -38,7 +39,7 @@ func accept(addr string, endSig chan signal) {
 	before := time.Now()
 	conn, err := ln.Accept()
 	if err != nil {
-		fmt.Printf("Addr[%s] listen error: %s\n", addr, err)
+		fmt.Printf("Addr[%s] accept error: %s\n", addr, err)
 		return
 	}
 	defer conn.Close()
