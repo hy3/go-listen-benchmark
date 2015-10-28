@@ -21,8 +21,8 @@ func main() {
 
 func fetchArgs() *args {
 	a := new(args)
-	flag.StringVar(&a.Host, "-h", "localhost", "hostname")
-	flag.IntVar(&a.Port, "-p", 1234, "portnum")
+	flag.StringVar(&a.Host, "h", "localhost", "hostname")
+	flag.IntVar(&a.Port, "p", 1234, "portnum")
 	flag.Parse()
 	return a
 }
