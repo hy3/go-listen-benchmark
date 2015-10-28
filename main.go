@@ -15,7 +15,6 @@ func main() {
 }
 
 func benchmark(addr string) {
-	fmt.Println("call")
 	endSig := make(chan signal)
 	go accept(addr, endSig)
 	if err := dial(addr); err != nil {
